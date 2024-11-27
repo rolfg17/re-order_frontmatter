@@ -1,0 +1,4 @@
+{
+    "top_keys": ["Status", "Area", "Project"],
+    "bottom_keys": ["ai.*"]
+}
