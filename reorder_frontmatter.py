@@ -189,8 +189,8 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Reorder YAML frontmatter in markdown files.')
     parser.add_argument('directory', help='Directory containing markdown files')
-    parser.add_argument('--config', default='frontmatter_config.json',
-                      help='Path to configuration file (default: frontmatter_config.json)')
+    parser.add_argument('--config', default=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'frontmatter_config.json'),
+                      help='Path to configuration file (default: frontmatter_config.json in script directory)')
     args = parser.parse_args()
     
     if not os.path.isdir(args.directory):
