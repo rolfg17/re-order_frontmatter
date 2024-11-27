@@ -4,7 +4,8 @@ Markdown Frontmatter Reorderer
 
 This script reorders YAML frontmatter in Markdown files according to configurable rules.
 It allows specifying which keys should appear at the top and bottom of the frontmatter,
-with support for wildcard patterns.
+with support for wildcard patterns. The script only processes markdown files in the 
+specified directory (not in subdirectories).
 
 Configuration is read from a JSON file (default: frontmatter_config.json) with format:
 {
@@ -17,6 +18,10 @@ Usage:
 
 Example:
     ./reorder_frontmatter.py ./my_markdown_files --config custom_config.json
+
+Note:
+    Only processes .md files directly in the specified directory.
+    Does not traverse into subdirectories.
 """
 
 import argparse
@@ -178,8 +183,9 @@ def main():
     """
     Main entry point for the script.
     
-    Reads configuration, processes markdown files in the specified directory,
-    and reports the outcome.
+    Reads configuration and processes markdown files in the specified directory.
+    Only processes files directly in the given directory, not in subdirectories.
+    Reports the outcome of the processing.
     """
     parser = argparse.ArgumentParser(description='Reorder YAML frontmatter in markdown files.')
     parser.add_argument('directory', help='Directory containing markdown files')
@@ -200,10 +206,11 @@ def main():
     processed_files = 0
     success_count = 0
     
-    for root, _, files in os.walk(args.directory):
-        for file in files:
-            if file.endswith('.md'):
-                filepath = os.path.join(root, file)
+    # Only process files in the root directory
+    for file in os.listdir(args.directory):
+        if file.endswith('.md'):
+            filepath = os.path.join(args.directory, file)
+            if os.path.isfile(filepath):  # Ensure it's a file, not a directory
                 processed_files += 1
                 if process_file(filepath, top_keys, bottom_keys):
                     success_count += 1
